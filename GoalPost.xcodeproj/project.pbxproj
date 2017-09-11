@@ -56,8 +56,11 @@
 		6CA05DD71F660B1A004DD524 /* GoalPost */ = {
 			isa = PBXGroup;
 			children = (
+				6CA05DF01F660B68004DD524 /* Enums */,
+				6CA05DEF1F660B63004DD524 /* Extensions */,
+				6CA05DEE1F660B4A004DD524 /* View */,
+				6CA05DED1F660B33004DD524 /* Controller */,
 				6CA05DD81F660B1A004DD524 /* AppDelegate.swift */,
-				6CA05DDA1F660B1A004DD524 /* ViewController.swift */,
 				6CA05DDC1F660B1A004DD524 /* Main.storyboard */,
 				6CA05DE21F660B1A004DD524 /* Assets.xcassets */,
 				6CA05DE41F660B1A004DD524 /* LaunchScreen.storyboard */,
@@ -65,6 +68,35 @@
 				6CA05DDF1F660B1A004DD524 /* GoalPost.xcdatamodeld */,
 			);
 			path = GoalPost;
+			sourceTree = "<group>";
+		};
+		6CA05DED1F660B33004DD524 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6CA05DDA1F660B1A004DD524 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		6CA05DEE1F660B4A004DD524 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CA05DEF1F660B63004DD524 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6CA05DF01F660B68004DD524 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
