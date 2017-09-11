@@ -16,6 +16,7 @@ class GoalsVC: UIViewController {
 
     //Outlets
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var undoView: UIView!
     
     //variables
     var goals = [Goal]()
@@ -52,6 +53,14 @@ class GoalsVC: UIViewController {
         presentDetail(createGoalVC)
     }
 
+    @IBAction func undoBtnPressed(_ sender: Any) {
+        guard let managedContext = appDelegate?.persistentContainer.viewContext else { return }
+        managedContext.undoManager?.undo()
+        undoView.isHidden = true
+        fetchCoreDataObjects()
+        tableView.reloadData()
+    }
+    
 }
 
 extension GoalsVC: UITableViewDataSource, UITableViewDelegate {
@@ -89,9 +98,21 @@ extension GoalsVC: UITableViewDataSource, UITableViewDelegate {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
         
-        deleteAction.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
+        let addAction = UITableViewRowAction(style: .normal, title: "ADD 1") { (rowAction, indexPath) in
+            self.updateProgress(atIndexPath: indexPath)
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
         
-        return [deleteAction]
+        deleteAction.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
+        addAction.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.662745098, blue: 0.2666666667, alpha: 1)
+        
+        let goal = goals[indexPath.row]
+        
+        if goal.goalProgress == goal.goalCompletionValue {
+            return [deleteAction]
+        } else {
+            return [deleteAction, addAction]
+        }
     }
 }
 
@@ -117,15 +138,36 @@ extension GoalsVC {
     func removeGoal(atIndexPath indexPath: IndexPath) {
         //1.Create an constant/reference to hold the Managed Object Context
         guard let managedContext = appDelegate?.persistentContainer.viewContext else { return }
-        
+        managedContext.undoManager = UndoManager()
         managedContext.delete(goals[indexPath.row])
         
         do {
             try managedContext.save()
+            undoView.isHidden = false
             print("Successfully removed goal")
         } catch {
             debugPrint("Could not remove \(error.localizedDescription)")
         }
     }
     
+    func updateProgress(atIndexPath indexPath: IndexPath) {
+        //1.Create an constant/reference to hold the Managed Object Context
+        guard let managedContext = appDelegate?.persistentContainer.viewContext else { return }
+        
+        //2. find the goal we want to update
+        let chosenGoal = goals[indexPath.row]
+        
+        if chosenGoal.goalProgress < chosenGoal.goalCompletionValue {
+            chosenGoal.goalProgress += 1
+        } else {
+            return
+        }
+        
+        do {
+            try managedContext.save()
+            print("Successfully set progress!")
+        } catch {
+            debugPrint("Could not set progress: \(error.localizedDescription)")
+        }
+    }
 }
